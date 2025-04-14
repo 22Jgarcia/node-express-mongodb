@@ -5,9 +5,10 @@ class dbClient {
     constructor(){
         const queryString = `mongodb+srv://${process.env.USER_DB}:${process.env.PASS_DB}@${process.env.SERVER_DB}/?retryWrites=true&w=majority&appName=adopcion`;
         this.client = new MongoClient(queryString);
-        this.conectarDB();
+        this.conectarBD();
     }
-    async conectarDB() {
+    
+    async conectarBD() {
         try {
             await this.client.connect();
             this.db = this.client.db('adopcion');

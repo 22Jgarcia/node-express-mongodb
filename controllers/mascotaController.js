@@ -7,7 +7,7 @@ class mascotaController{
 
     async create(req, res){
         try {
-            const data = mascotasModelo.create(req, body);
+            const data = await mascotasModelo.create(req.body);
 
             res.status(201).json({
                 message: 'Mascota creada correctamente',
@@ -16,18 +16,29 @@ class mascotaController{
 
         } catch (e) {
             res.status(500).json({
-                message: 'Error al crear la mascota'
+                message: 'Error al crear la mascota',
+                error: e.message
             })
         }
     }
 
     async update(req, res){
         try {
-            res.status(201).json({
-                message: 'Mascota actualizada correctamente'
+            const id = req.params.id;
+            const data = await mascotasModelo.update(id,req.body);
+            if(!data){
+                return res.status(404).json({
+                    message: 'Mascota no encontrada'
+                })
+            }
+
+            res.status(200).json({
+                message: 'Mascota actualizada correctamente', data
             })
         } catch (e) {
+            console.log(e);
             res.status(500).json({
+        
                 message: 'Error al actualizar la mascota'
             })
         }
@@ -35,7 +46,15 @@ class mascotaController{
 
     async delete(req, res){
         try {
-            res.status(201).json({
+            const id = req.params.id;
+            const data = await mascotasModelo.delete(id);
+            if (!data) {
+                return res.status(404).json({
+                    message: 'Mascota no encontrada'
+                })
+            }
+
+            res.status(206).json({
                 message: 'Mascota eliminada correctamente'
             })
         } catch (e) {
@@ -47,8 +66,14 @@ class mascotaController{
 
     async getAll(req, res){
         try {
+
+            // const data = await mascotasModelo.getAll(req.body);
+
+            const data = await mascotasModelo.getAll();
+
             res.status(201).json({
-                message: 'todas las Mascotas '
+                message: 'todas las Mascotas ',
+                data
             })
         } catch (e) {
             res.status(500).json({
@@ -59,8 +84,18 @@ class mascotaController{
 
     async getOne(req, res){
         try {
+            const id = req.params.id;
+            const data = await mascotasModelo.getOne(id);
+            if (!data) {
+                return res.status(404).json({
+                    message: 'Mascota no encontrada'
+                })
+            }
+
             res.status(201).json({
-                message: 'una Mascota '
+                message: 'una Mascota ',
+                data
+
             })
         } catch (e) {
             res.status(500).json({
